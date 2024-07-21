@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PostProps } from "./types";
+import { getCustomServerSession } from "@/lib/auth";
 
 async function fetchBlogs() {
   const res = await fetch("http://localhost:3000/api/blog", {
@@ -15,11 +16,15 @@ async function fetchBlogs() {
 export default async function Home() {
   const posts = await fetchBlogs();
   // console.log(posts);
+  const session = await getCustomServerSession();
+
+  console.log(session);
 
   return (
     <main className="w-full h-full">
       <div className="md:w-2/4 sm:w-3/4 m-auto p-4 my-5 rounded-lg bg-blue-900 drop-shadow-xl">
         <h1 className="text-slate-200 text-center text-2xl font-extrabold">
+          <div>{session?.user.name}でログイン中</div>
           Full Stack Blog App
         </h1>
       </div>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 // import prisma from "../../../../prisma";
 import { PrismaClient } from "@prisma/client";
+import { getCustomServerSession } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -28,12 +29,13 @@ export const POST = async (req: Request, res: NextResponse) => {
   try {
     const { ...data } = await req.json();
     await main();
+    const session = await getCustomServerSession();
     const post = await prisma.post.create({
       data: {
         ...data,
         createdBy: {
           connect: {
-            id: "1", // ここでユーザーのIDを使用します todo あとで可変にする
+            id: session?.user.id, // ここでユーザーのIDを使用します todo あとで可変にする
           },
         },
       },

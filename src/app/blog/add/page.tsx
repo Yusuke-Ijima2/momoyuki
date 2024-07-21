@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 import { toast } from "react-hot-toast";
@@ -60,6 +61,8 @@ const AddBlog = () => {
     <div className="w-full m-auto flex my-4">
       <div className="flex flex-col justify-center items-center m-auto">
         <p className="text-2xl text-slate-200 font-bold p-3">
+          <button onClick={() => signIn()}>ログイン</button>
+          <button onClick={() => signOut()}>ログアウト</button>
           Add a Wonderful Blog 🚀
         </p>
         <form onSubmit={handleSubmit}>
