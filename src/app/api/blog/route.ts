@@ -25,8 +25,6 @@ export const GET = async (req: Request, res: NextResponse) => {
 };
 
 export const POST = async (req: Request, res: NextResponse) => {
-  console.log("POST");
-
   try {
     const { ...data } = await req.json();
     await main();

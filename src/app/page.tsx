@@ -53,7 +53,7 @@ export default async function Home() {
 
             <div className="mr-auto my-1">
               <blockquote className="font-bold text-slate-700">
-                {new Date(post.date).toDateString()}
+                {new Date(post.createdAt).toDateString()}
               </blockquote>
             </div>
 
