@@ -26,12 +26,14 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 export const POST = async (req: Request, res: NextResponse) => {
   try {
-    const { ...data } = await req.json();
+    const { title, description, name } = await req.json();
     await main();
     const session = await getServerSession();
     const post = await prisma.post.create({
       data: {
-        ...data,
+        title,
+        description,
+        name,
         createdBy: {
           connect: {
             id: session?.user.id,

@@ -6,10 +6,10 @@ const prisma = new PrismaClient();
 
 export const GET = async (
   req: Request,
-  { params }: { params: { blogId: string } }
+  { params }: { params: { postId: string } }
 ) => {
   try {
-    const id: number = parseInt(params.blogId);
+    const id: number = parseInt(params.postId);
     await main();
 
     const post = await prisma.post.findFirst({ where: { id } });
@@ -28,10 +28,10 @@ export const GET = async (
 
 export const PUT = async (
   req: Request,
-  { params }: { params: { blogId: string } }
+  { params }: { params: { postId: string } }
 ) => {
   try {
-    const id: number = parseInt(params.blogId);
+    const id: number = parseInt(params.postId);
     const { ...data } = await req.json();
 
     await main();
@@ -51,10 +51,10 @@ export const PUT = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { blogId: string } }
+  { params }: { params: { postId: string } }
 ) => {
   try {
-    const id: number = parseInt(params.blogId);
+    const id: number = parseInt(params.postId);
 
     await main();
 

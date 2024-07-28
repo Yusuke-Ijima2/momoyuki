@@ -4,15 +4,15 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 
-type UpdateBlogParams = {
+type UpdatePostParams = {
   title: string;
   description: string;
   name: string;
   id: string;
 };
 
-const updateBlog = async (data: UpdateBlogParams) => {
-  const res = fetch(`http://localhost:3000/api/blog/${data.id}`, {
+const updatePost = async (data: UpdatePostParams) => {
+  const res = fetch(`http://localhost:3000/api/post/${data.id}`, {
     method: "PUT",
     body: JSON.stringify({
       title: data.title,
@@ -26,14 +26,14 @@ const updateBlog = async (data: UpdateBlogParams) => {
   return (await res).json();
 };
 
-const getBlogById = async (id: number) => {
-  const res = await fetch(`http://localhost:3000/api/blog/${id}`);
+const getPostById = async (id: number) => {
+  const res = await fetch(`http://localhost:3000/api/post/${id}`);
   const data = await res.json();
   return data.post;
 };
 
-const deleteBlog = async (id: number) => {
-  const res = fetch(`http://localhost:3000/api/blog/${id}`, {
+const deletePost = async (id: number) => {
+  const res = fetch(`http://localhost:3000/api/post/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const deleteBlog = async (id: number) => {
   return (await res).json();
 };
 
-const EditBlog = ({ params }: { params: { id: string } }) => {
+const EditPost = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
@@ -55,33 +55,33 @@ const EditBlog = ({ params }: { params: { id: string } }) => {
       toast.loading("Sending Request 🚀", { id: "1" }); // todo @see https://react-hot-toast.com/docs/toast#:~:text=Prevent%20duplicate%20toasts,%7D)%3B
 
       try {
-        await updateBlog({
+        await updatePost({
           title: titleRef.current.value,
           description: descriptionRef.current.value,
           name: nameRef.current.value,
           id: params.id,
         });
 
-        toast.success("Blog Posted Successfully", { id: "1" });
+        toast.success("Post Posted Successfully", { id: "1" });
 
         router.push("/");
         router.refresh();
       } catch (error) {
-        toast.error("Failed to post blog", { id: "1" });
-        console.error("Error posting blog:", error);
+        toast.error("Failed to post post", { id: "1" });
+        console.error("Error posting post:", error);
       }
     }
   };
 
   const handleDelete = async () => {
-    toast.loading("Deleting Blog", { id: "2" });
-    await deleteBlog(parseInt(params.id));
-    toast.success("Deleted Blog", { id: "2" });
+    toast.loading("Deleting Post", { id: "2" });
+    await deletePost(parseInt(params.id));
+    toast.success("Deleted Post", { id: "2" });
   };
 
   useEffect(() => {
-    toast.loading("Fetching Blog Details 🚀", { id: "1" });
-    getBlogById(parseInt(params.id))
+    toast.loading("Fetching Post Details 🚀", { id: "1" });
+    getPostById(parseInt(params.id))
       .then((data) => {
         if (titleRef.current && descriptionRef.current && nameRef.current) {
           titleRef.current.value = data.title;
@@ -94,7 +94,7 @@ const EditBlog = ({ params }: { params: { id: string } }) => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error Fetching Blog", { id: "1" });
+        toast.error("Error Fetching Post", { id: "1" });
       });
   }, []);
 
@@ -102,7 +102,7 @@ const EditBlog = ({ params }: { params: { id: string } }) => {
     <div className="w-full m-auto flex my-4">
       <div className="flex flex-col justify-center items-center m-auto">
         <p className="text-2xl text-slate-200 font-bold p-3">
-          Edit a Wonderful Blog 🚀
+          Edit a Wonderful Post 🚀
         </p>
         <form onSubmit={handleSubmit}>
           <input
@@ -136,4 +136,4 @@ const EditBlog = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default EditBlog;
+export default EditPost;

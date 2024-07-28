@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 import { toast } from "react-hot-toast";
 
-const postBlog = async ({
+const postPost = async ({
   title,
   description,
   name,
@@ -14,7 +14,7 @@ const postBlog = async ({
   description: string;
   name: string;
 }) => {
-  const res = await fetch("http://localhost:3000/api/blog", {
+  const res = await fetch("http://localhost:3000/api/post", {
     method: "POST",
     body: JSON.stringify({ title, description, name }),
     headers: {
@@ -22,12 +22,12 @@ const postBlog = async ({
     },
   });
   if (!res.ok) {
-    throw new Error("Failed to post blog");
+    throw new Error("Failed to post post");
   }
   return res.json();
 };
 
-const AddBlog = () => {
+const AddPost = () => {
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
@@ -40,19 +40,19 @@ const AddBlog = () => {
       toast.loading("Sending Request 🚀", { id: "1" });
 
       try {
-        await postBlog({
+        await postPost({
           title: titleRef.current.value,
           description: descriptionRef.current.value,
           name: nameRef.current.value,
         });
 
-        toast.success("Blog Posted Successfully", { id: "1" });
+        toast.success("Post Posted Successfully", { id: "1" });
 
         router.push("/");
         router.refresh();
       } catch (error) {
-        toast.error("Failed to post blog", { id: "1" });
-        console.error("Error posting blog:", error);
+        toast.error("Failed to post post", { id: "1" });
+        console.error("Error posting post:", error);
       }
     }
   };
@@ -63,7 +63,7 @@ const AddBlog = () => {
         <p className="text-2xl text-slate-200 font-bold p-3">
           <button onClick={() => signIn()}>ログイン</button>
           <button onClick={() => signOut()}>ログアウト</button>
-          Add a Wonderful Blog 🚀
+          Add a Wonderful Post 🚀
         </p>
         <form onSubmit={handleSubmit}>
           <input
@@ -91,4 +91,4 @@ const AddBlog = () => {
   );
 };
 
-export default AddBlog;
+export default AddPost;

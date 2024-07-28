@@ -12,16 +12,14 @@ datasource db {
 
 model Post {
     id        Int      @id @default(autoincrement())
-    name      String // todo 後で消すかも
-    title String 
-    description String
+    location String
+    description String?
+    image String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
-
-    @@index([name])
 }
 
 // Necessary for Next auth
