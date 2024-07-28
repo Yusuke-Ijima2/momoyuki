@@ -15,9 +15,9 @@ const ViewPostDetail = ({ post }: Props) => {
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set("query", term);
+      params.set("location", term);
     } else {
-      params.delete("query");
+      params.delete("location");
     }
     router.push(`${pathname}?${params.toString()}`);
   }

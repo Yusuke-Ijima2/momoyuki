@@ -2,12 +2,13 @@ import SearchMap from "./_component/search-map";
 import Auth from "./_component/auth";
 import { getServerSession } from "@/lib/auth";
 import ViewPost from "./_component/view-post";
+import SearchMapView from "./_component/search-map-view";
 
 const Home = async ({
   searchParams,
 }: {
   searchParams?: {
-    query?: string;
+    location?: string;
   };
 }) => {
   const session = await getServerSession();
@@ -19,7 +20,9 @@ const Home = async ({
         {session && `${session.user.name}でログイン中`} <Auth />
       </div>
       <ViewPost />
-      <SearchMap query={searchParams?.query} />
+      <SearchMap>
+        <SearchMapView location={searchParams?.location} />
+      </SearchMap>
     </div>
   );
 };
