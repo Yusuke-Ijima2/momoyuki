@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PostProps } from "../types";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
@@ -23,15 +24,10 @@ const ViewPostDetail = ({ post }: Props) => {
   }
 
   return (
-    <div
-      key={post.id}
-      className="border p-2"
-      onClick={() => handleSearch(post.location)}
-    >
+    <div key={post.id} className="border p-2">
       <h2 className="mr-auto font-semibold">{post.location}</h2>
-      {/* <Link href={`/post/edit/${post.id}`} className="">
-      編集する
-    </Link> */}
+      <button onClick={() => handleSearch(post.location)}>表示する</button>
+      <Link href={`/post/edit/${post.id}`}>編集する</Link>
       <div className="mr-auto">
         <p>{post?.description}</p>
         <p>{post.createdBy.name}</p>

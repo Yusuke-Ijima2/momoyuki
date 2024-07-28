@@ -1,4 +1,4 @@
-import { PostProps } from "../types";
+import { PostProps, UpdatePostParams } from "../types";
 import ViewPostDetail from "./view-post-detail";
 
 async function fetchPosts() {
@@ -10,6 +10,30 @@ async function fetchPosts() {
 
   return data.posts;
 }
+
+const updatePost = async (data: UpdatePostParams) => {
+  const res = fetch(`http://localhost:3000/api/post/${data.id}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      location: data.location,
+      description: data.description,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return (await res).json();
+};
+
+const deletePost = async (id: number) => {
+  const res = fetch(`http://localhost:3000/api/post/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return (await res).json();
+};
 
 const ViewPost = async () => {
   const posts = await fetchPosts();

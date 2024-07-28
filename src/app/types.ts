@@ -14,3 +14,10 @@ export type CreatedBy = {
   name: string;
   email: string;
 };
+
+export type UpdatePostParams = {
+  id: number;
+  location: string;
+  description?: string;
+  image?: string;
+};
