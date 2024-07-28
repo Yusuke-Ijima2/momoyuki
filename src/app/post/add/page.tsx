@@ -1,22 +1,19 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 import { toast } from "react-hot-toast";
 
 const postPost = async ({
-  title,
+  location,
   description,
-  name,
 }: {
-  title: string;
+  location: string;
   description: string;
-  name: string;
 }) => {
   const res = await fetch("http://localhost:3000/api/post", {
     method: "POST",
-    body: JSON.stringify({ title, description, name }),
+    body: JSON.stringify({ location, description }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -29,21 +26,19 @@ const postPost = async ({
 
 const AddPost = () => {
   const router = useRouter();
-  const titleRef = useRef<HTMLInputElement | null>(null);
+  const locationRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
-  const nameRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (titleRef.current && descriptionRef.current && nameRef.current) {
+    if (locationRef.current && descriptionRef.current) {
       toast.loading("Sending Request 🚀", { id: "1" });
 
       try {
         await postPost({
-          title: titleRef.current.value,
+          location: locationRef.current.value,
           description: descriptionRef.current.value,
-          name: nameRef.current.value,
         });
 
         toast.success("Post Posted Successfully", { id: "1" });
@@ -60,27 +55,17 @@ const AddPost = () => {
   return (
     <div className="w-full m-auto flex my-4">
       <div className="flex flex-col justify-center items-center m-auto">
-        <p className="text-2xl text-slate-200 font-bold p-3">
-          <button onClick={() => signIn()}>ログイン</button>
-          <button onClick={() => signOut()}>ログアウト</button>
-          Add a Wonderful Post 🚀
-        </p>
         <form onSubmit={handleSubmit}>
           <input
-            ref={titleRef}
-            placeholder="Enter Title"
+            ref={locationRef}
+            placeholder="場所"
             type="text"
-            className="rounded-md px-4 w-full py-2 my-2"
+            className="rounded-md px-4 w-full py-2 my-2 border"
           />
           <textarea
             ref={descriptionRef}
-            placeholder="Enter Description"
-            className="rounded-md px-4 py-2 w-full my-2"
-          ></textarea>
-          <textarea
-            ref={nameRef}
-            placeholder="Enter Name"
-            className="rounded-md px-4 py-2 w-full my-2"
+            placeholder="説明"
+            className="rounded-md px-4 py-2 w-full my-2 border"
           ></textarea>
           <button className="font-semibold px-4 py-2 shadow-xl bg-slate-200 rounded-lg m-auto hover:bg-slate-100">
             Submit

@@ -4,10 +4,14 @@ import { signIn, signOut } from "next-auth/react";
 
 const Auth = () => {
   return (
-    <>
-      <button onClick={() => signIn()}>ログイン</button>
-      <button onClick={() => signOut()}>ログアウト</button>
-    </>
+    <div className="space-x-2">
+      <button className="p-2 border" onClick={() => signIn()}>
+        ログイン
+      </button>
+      <button className="p-2 border" onClick={() => signOut()}>
+        ログアウト
+      </button>
+    </div>
   );
 };
 

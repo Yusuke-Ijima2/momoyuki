@@ -1,9 +1,16 @@
 export type PostProps = {
   id: number;
-  name: string;
-  title: string;
-  description: string;
+  location: string;
+  description?: string;
+  image?: string;
   createdAt: string;
   updatedAt: string;
+  createdBy: CreatedBy;
   createdById: string;
+};
+
+export type CreatedBy = {
+  id: string;
+  name: string;
+  email: string;
 };

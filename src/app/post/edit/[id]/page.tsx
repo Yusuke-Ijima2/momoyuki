@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 
 type UpdatePostParams = {
-  title: string;
+  location: string;
   description: string;
   name: string;
   id: string;
@@ -15,7 +15,7 @@ const updatePost = async (data: UpdatePostParams) => {
   const res = fetch(`http://localhost:3000/api/post/${data.id}`, {
     method: "PUT",
     body: JSON.stringify({
-      title: data.title,
+      location: data.location,
       description: data.description,
       name: data.name,
     }),
@@ -44,19 +44,19 @@ const deletePost = async (id: number) => {
 
 const EditPost = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const titleRef = useRef<HTMLInputElement | null>(null);
+  const locationRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const nameRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (titleRef.current && descriptionRef.current && nameRef.current) {
+    if (locationRef.current && descriptionRef.current && nameRef.current) {
       toast.loading("Sending Request 🚀", { id: "1" }); // todo @see https://react-hot-toast.com/docs/toast#:~:text=Prevent%20duplicate%20toasts,%7D)%3B
 
       try {
         await updatePost({
-          title: titleRef.current.value,
+          location: locationRef.current.value,
           description: descriptionRef.current.value,
           name: nameRef.current.value,
           id: params.id,
@@ -83,8 +83,8 @@ const EditPost = ({ params }: { params: { id: string } }) => {
     toast.loading("Fetching Post Details 🚀", { id: "1" });
     getPostById(parseInt(params.id))
       .then((data) => {
-        if (titleRef.current && descriptionRef.current && nameRef.current) {
-          titleRef.current.value = data.title;
+        if (locationRef.current && descriptionRef.current && nameRef.current) {
+          locationRef.current.value = data.location;
           descriptionRef.current.value = data.description;
           descriptionRef.current.value = data.description;
           nameRef.current.value = data.name;
@@ -106,8 +106,8 @@ const EditPost = ({ params }: { params: { id: string } }) => {
         </p>
         <form onSubmit={handleSubmit}>
           <input
-            ref={titleRef}
-            placeholder="Enter Title"
+            ref={locationRef}
+            placeholder="Enter location"
             type="text"
             className="rounded-md px-4 w-full py-2 my-2"
           />
