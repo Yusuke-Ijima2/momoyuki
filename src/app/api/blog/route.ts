@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-// import prisma from "../../../../prisma";
 import { PrismaClient } from "@prisma/client";
 import { getCustomServerSession } from "@/lib/auth";
 
@@ -35,7 +34,7 @@ export const POST = async (req: Request, res: NextResponse) => {
         ...data,
         createdBy: {
           connect: {
-            id: session?.user.id, // ここでユーザーのIDを使用します todo あとで可変にする
+            id: session?.user.id,
           },
         },
       },
