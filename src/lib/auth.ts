@@ -6,35 +6,36 @@ import { prisma } from "@/lib/prisma";
 import type { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma as any),
-  secret: process.env.NEXTAUTH_SECRET,
+  adapter: PrismaAdapter(prisma as any), // eslint-disable-line
   session: {
     strategy: "jwt",
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_ID || "",
+      clientSecret: process.env.GOOGLE_SECRET || "",
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
       const dbUser = await prisma.user.findFirst({
         where: { email: token.email },
       });
-      if (dbUser) {
-        token.id = dbUser.id;
-        token.name = dbUser.name;
-        token.email = dbUser.email;
-        token.picture = dbUser.image;
+      if (!dbUser) {
+        if (user) {
+          token.id = user?.id;
+        }
+        return token;
       }
-      return token;
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        picture: dbUser.image,
+      };
     },
     async session({ session, token }) {
-      if (token) {
+      if (session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name;
         session.user.email = token.email;
@@ -45,6 +46,6 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const getCustomServerSession = cache(async () => {
+export const getServerSession = cache(async () => {
   return originalGetServerSession(authOptions);
 });

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PostProps } from "./types";
-import { getCustomServerSession } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 
 async function fetchBlogs() {
   const res = await fetch("http://localhost:3000/api/blog", {
@@ -15,8 +15,7 @@ async function fetchBlogs() {
 
 export default async function Home() {
   const posts = await fetchBlogs();
-  // console.log(posts);
-  const session = await getCustomServerSession();
+  const session = await getServerSession();
 
   console.log(session);
 

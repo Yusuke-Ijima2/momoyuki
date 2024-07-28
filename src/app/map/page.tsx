@@ -55,7 +55,6 @@ const Home: React.FC = () => {
       `https://maps.googleapis.com/maps/api/geocode/json?address=${data.place}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
     );
     const result = await response.json();
-    console.log(result);
 
     if (result.results.length > 0) {
       const location = result.results[0].geometry.location;
@@ -76,7 +75,7 @@ const Home: React.FC = () => {
         </div>
         <button type="submit">Search</button>
       </form>
-      <div style={{ width: "100%", height: "100vh" }}>
+      <div style={{ width: "100%", height: "100%" }}>
         <Wrapper
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
           render={render}

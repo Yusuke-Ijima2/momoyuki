@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { getCustomServerSession } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -28,7 +28,7 @@ export const POST = async (req: Request, res: NextResponse) => {
   try {
     const { ...data } = await req.json();
     await main();
-    const session = await getCustomServerSession();
+    const session = await getServerSession();
     const post = await prisma.post.create({
       data: {
         ...data,
