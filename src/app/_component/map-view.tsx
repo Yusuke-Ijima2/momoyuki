@@ -142,10 +142,15 @@ const SearchBox: React.FC<{
     }
   };
 
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // フォームのデフォルト送信を防ぐ
+    handleSubmit(onSubmit)(); // フォーム送信を手動で実行
+  };
+
   return (
     <div className="my-2">
       <label>↓場所を追加する↓</label>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className="space-y-2 md:space-x-2">
           <input
             className="p-2 border rounded"
@@ -161,7 +166,11 @@ const SearchBox: React.FC<{
             {...register("description")}
           />
           <input type="file" onChange={handleImageChange} />
-          <button type="button" className="border p-2 ml-2">
+          <button
+            type="button"
+            className="border p-2 ml-2"
+            onClick={handleButtonClick}
+          >
             追加
           </button>
         </div>

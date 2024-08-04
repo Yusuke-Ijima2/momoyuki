@@ -2,15 +2,22 @@ import { PostProps } from "../types";
 import ViewPostDetail from "./view-post-detail";
 
 async function fetchPosts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/post`, {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/post`, {
+      cache: "no-store",
+    });
 
-  const data = await res.json();
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
 
-  console.log(data);
-
-  return data.posts;
+    const data = await res.json();
+    console.log(data);
+    return data.posts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return [];
+  }
 }
 
 const ViewPost = async () => {
