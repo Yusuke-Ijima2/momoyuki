@@ -20,7 +20,7 @@ const Home = async ({
       </div>
       <ViewPost />
 
-      <SearchMapView location={searchParams?.location} />
+      {/* <SearchMapView location={searchParams?.location} /> */}
     </div>
   );
 };
