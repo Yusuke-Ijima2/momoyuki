@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
-import { main } from "../route";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
+async function main() {
+  try {
+    await prisma.$connect();
+  } catch (err) {
+    return Error("DB接続に失敗しました");
+  }
+}
 
 export const GET = async (
   req: Request,

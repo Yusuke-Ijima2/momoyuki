@@ -5,7 +5,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const prisma = new PrismaClient();
 
-export async function main() {
+async function main() {
   try {
     await prisma.$connect();
   } catch (err) {
