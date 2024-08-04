@@ -14,7 +14,7 @@ const Home = async ({
 
   return (
     <div className="space-y-2">
-      <p>v1.0</p>
+      <p>v1.0 ももかとゆきちゃんのために作ったアプリ</p>
       <div className="p-4">
         {session && `${session.user.name}でログイン中`} <Auth />
       </div>
