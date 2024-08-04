@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PostProps } from "../types";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 type Props = {
   post: PostProps;
@@ -15,6 +16,7 @@ const ViewPostDetail = ({ post }: Props) => {
   const router = useRouter();
 
   function handleSearch(term: string) {
+    toast.loading("検索中...", { id: "postSearch" });
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("location", term);

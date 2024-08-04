@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import MapView from "./map-view";
 
 type Props = {
@@ -16,6 +17,7 @@ const SearchMapView = async ({ location }: Props) => {
 
     if (result.results.length > 0) {
       const location = result.results[0].geometry.location;
+      toast.dismiss("postSearch");
       return location;
     } else {
       new Error("場所が見つかりませんでした");
