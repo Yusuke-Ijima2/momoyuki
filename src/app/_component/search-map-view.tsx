@@ -24,15 +24,9 @@ const SearchMapView = async ({ location }: Props) => {
   const centerLocation = await fetchLocation();
 
   return (
-    <>
-      {location ? (
-        <div style={{ width: "100vw", height: "100vh" }}>
-          <MapView center={centerLocation} />
-        </div>
-      ) : (
-        <p>お気に入りの場所を追加してみよう！</p>
-      )}
-    </>
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <MapView center={centerLocation} />
+    </div>
   );
 };
 

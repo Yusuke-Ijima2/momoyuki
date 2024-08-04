@@ -32,7 +32,7 @@ const ViewPostDetail = ({ post }: Props) => {
           alt="画像"
           src={post.image}
           onClick={() => handleSearch(post.location)}
-          className="w-full sm:w-20"
+          className="w-full sm:w-20 cursor-pointer"
           width={100}
           height={100}
         />

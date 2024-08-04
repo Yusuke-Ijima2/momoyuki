@@ -12,7 +12,6 @@ async function fetchPosts() {
     }
 
     const data = await res.json();
-    console.log(data);
     return data.posts;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -22,8 +21,6 @@ async function fetchPosts() {
 
 const ViewPost = async () => {
   const posts = await fetchPosts();
-
-  console.log(posts);
 
   return (
     <div className="grid grid-cols-3">

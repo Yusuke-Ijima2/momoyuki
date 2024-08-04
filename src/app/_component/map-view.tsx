@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {
   center: google.maps.LatLngLiteral;
@@ -75,6 +76,8 @@ const SearchBox: React.FC<{
   const { register, handleSubmit, setValue } = useForm<FormData>();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
+  const router = useRouter();
+
   useEffect(() => {
     const initAutocomplete = async () => {
       if (
@@ -132,11 +135,13 @@ const SearchBox: React.FC<{
       toast.error("画像を選択してください");
       return;
     }
+    toast.loading("追加しています...", { id: "postPost" });
 
     try {
       await postPost(data, selectedImage);
 
       toast.success("追加しました", { id: "postPost" });
+      router.refresh();
     } catch (error) {
       console.error("Error posting post:", error);
     }
@@ -197,13 +202,17 @@ const MapView = ({ center }: Props) => {
 
   return (
     <>
-      <SearchBox onPlaceChanged={handlePlaceChanged} />
       <Wrapper
         apiKey={process.env.GOOGLE_MAPS_API_KEY!}
         render={render}
         libraries={["places"]}
       >
-        <Map center={location} zoom={18} />
+        <SearchBox onPlaceChanged={handlePlaceChanged} />
+        {location ? (
+          <Map center={location} zoom={18} />
+        ) : (
+          <p>お気に入りの場所を追加してみよう！</p>
+        )}
       </Wrapper>
     </>
   );
