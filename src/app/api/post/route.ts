@@ -45,18 +45,18 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 // 環境変数からAWSの設定を取得
 const {
-  NEXT_PUBLIC_AWS_S3_BUCKET_ACCESS_KEY_ID,
-  NEXT_PUBLIC_AWS_S3_BUCKET_SECRET_ACCESS_KEY,
-  NEXT_PUBLIC_AWS_S3_BUCKET_REGION,
-  NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
+  AWS_S3_BUCKET_ACCESS_KEY_ID,
+  AWS_S3_BUCKET_SECRET_ACCESS_KEY,
+  AWS_S3_BUCKET_REGION,
+  AWS_S3_BUCKET_NAME,
 } = process.env;
 
 // S3クライアントの作成
 const s3Client = new S3Client({
-  region: NEXT_PUBLIC_AWS_S3_BUCKET_REGION,
+  region: AWS_S3_BUCKET_REGION,
   credentials: {
-    accessKeyId: NEXT_PUBLIC_AWS_S3_BUCKET_ACCESS_KEY_ID!,
-    secretAccessKey: NEXT_PUBLIC_AWS_S3_BUCKET_SECRET_ACCESS_KEY!,
+    accessKeyId: AWS_S3_BUCKET_ACCESS_KEY_ID!,
+    secretAccessKey: AWS_S3_BUCKET_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
     // アップロードパラメータの設定
     const uploadParams = {
-      Bucket: NEXT_PUBLIC_AWS_S3_BUCKET_NAME!,
+      Bucket: AWS_S3_BUCKET_NAME!,
       Key: fileName, // 保存時の画像名
       Body: buffer, // input fileから取得
       ContentType: file.type, // 適切なContentTypeを設定
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
     await s3Client.send(command);
 
     // アップロードされた画像のURLを生成
-    const imageUrl = `https://${NEXT_PUBLIC_AWS_S3_BUCKET_NAME}.s3.${NEXT_PUBLIC_AWS_S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
+    const imageUrl = `https://${AWS_S3_BUCKET_NAME}.s3.${AWS_S3_BUCKET_REGION}.amazonaws.com/${fileName}`;
 
     await main();
     const session = await getServerSession();
