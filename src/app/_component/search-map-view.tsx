@@ -17,7 +17,7 @@ const SearchMapView = async ({ location }: Props) => {
 
     if (result.results.length > 0) {
       const location = result.results[0].geometry.location;
-      toast.dismiss("postSearch");
+      toast.success("完了", { id: "postSearch", icon: "✅" });
       return location;
     } else {
       new Error("場所が見つかりませんでした");
