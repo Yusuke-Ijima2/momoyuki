@@ -55,7 +55,7 @@ const postPost = async (formData: FormData, file: File) => {
   data.append("file", file);
 
   const res = await fetch(
-    `http://localhost:3000/api/post?filename=${file.name}`,
+    `${process.env.NEXTAUTH_URL}api/post?filename=${file.name}`,
     {
       method: "POST",
       body: data,

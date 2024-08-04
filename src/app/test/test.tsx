@@ -4,7 +4,7 @@
 // import { getServerSession } from "@/lib/auth";
 
 // async function fetchPosts() {
-//   const res = await fetch("http://localhost:3000/api/post", {
+//   const res = await fetch("${process.env.NEXTAUTH_URL}api/post", {
 //     cache: "no-store",
 //   });
 
