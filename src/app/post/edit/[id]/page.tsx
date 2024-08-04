@@ -86,7 +86,7 @@ const EditPost = ({ params }: { params: { id: string } }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [params.id]);
 
   return (
     <div className="w-full m-auto flex my-4">
