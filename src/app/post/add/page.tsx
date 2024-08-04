@@ -11,7 +11,7 @@ const postPost = async ({
   location: string;
   description: string;
 }) => {
-  const res = await fetch(`${process.env.NEXT_AUTH_URL}/api/post`, {
+  const res = await fetch(`/api/post`, {
     method: "POST",
     body: JSON.stringify({ location, description }),
     headers: {

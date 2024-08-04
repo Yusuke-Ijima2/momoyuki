@@ -7,14 +7,14 @@ import type { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma as any),
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXT_PUBLIC_NEXT_AUTH_SECRET,
   session: {
     strategy: "jwt",
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || "",
     }),
   ],
   callbacks: {

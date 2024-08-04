@@ -19,13 +19,10 @@ const postPost = async (formData: FormData, file: File) => {
   data.append("description", formData.description);
   data.append("file", file);
 
-  const res = await fetch(
-    `${process.env.NEXT_AUTH_URL}/api/post?filename=${file.name}`,
-    {
-      method: "POST",
-      body: data,
-    }
-  );
+  const res = await fetch(`/api/post?filename=${file.name}`, {
+    method: "POST",
+    body: data,
+  });
 
   if (!res.ok) {
     throw new Error("Failed to post post");
