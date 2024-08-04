@@ -2,7 +2,7 @@ import { PostProps } from "../types";
 import ViewPostDetail from "./view-post-detail";
 
 async function fetchPosts() {
-  const res = await fetch(`${process.env.API_HOST}/api/post`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/post`, {
     cache: "no-store",
   });
 
