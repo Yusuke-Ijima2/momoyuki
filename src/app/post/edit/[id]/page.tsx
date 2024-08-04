@@ -11,7 +11,7 @@ type UpdatePostParams = {
 };
 
 const updatePost = async (data: UpdatePostParams) => {
-  const res = fetch(`${process.env.NEXT_AUTH_URL}/api/post/${data.id}`, {
+  const res = fetch(`${process.env.API_HOST}/api/post/${data.id}`, {
     method: "PUT",
     body: JSON.stringify({
       location: data.location,
@@ -25,13 +25,13 @@ const updatePost = async (data: UpdatePostParams) => {
 };
 
 const getPostById = async (id: number) => {
-  const res = await fetch(`${process.env.NEXT_AUTH_URL}/api/post/${id}`);
+  const res = await fetch(`${process.env.API_HOST}/api/post/${id}`);
   const data = await res.json();
   return data.post;
 };
 
 const deletePost = async (id: number) => {
-  const res = fetch(`${process.env.NEXT_AUTH_URL}/api/post/${id}`, {
+  const res = fetch(`${process.env.API_HOST}/api/post/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
