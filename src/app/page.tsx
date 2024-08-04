@@ -18,7 +18,7 @@ const Home = async ({
       <div className="p-4">
         {session && `${session.user.name}でログイン中`} <Auth />
       </div>
-      {/* <ViewPost /> */}
+      <ViewPost />
       <SearchMapView location={searchParams?.location} />
     </div>
   );
