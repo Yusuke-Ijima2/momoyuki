@@ -14,6 +14,8 @@ async function fetchPosts() {
 const ViewPost = async () => {
   const posts = await fetchPosts();
 
+  console.log(posts);
+
   return (
     <div className="grid grid-cols-3">
       {posts.map((post: PostProps) => (
