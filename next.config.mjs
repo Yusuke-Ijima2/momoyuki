@@ -6,6 +6,11 @@ const pwaConfig = withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
+  pwa: {
+    dest: "public",
+    runtimeCaching,
+    buildExcludes: [/middleware-manifest.json$/],
+  },
 });
 
 const config = {
