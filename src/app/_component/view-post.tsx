@@ -19,7 +19,8 @@ const ViewPost = async () => {
   return (
     <div className="grid grid-cols-3">
       {posts.map((post: PostProps) => (
-        <ViewPostDetail key={post.id} post={post} />
+        // <ViewPostDetail key={post.id} post={post} />
+        <></>
       ))}
     </div>
   );
