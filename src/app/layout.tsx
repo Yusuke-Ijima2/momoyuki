@@ -19,6 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon.png"></link>
+      </head>
       <body className={inter.className}>
         <NextAuthProvider>
           <Toaster />
