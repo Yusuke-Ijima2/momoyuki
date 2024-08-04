@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { PostProps } from "../types";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Props = {
   post: PostProps;
@@ -26,7 +27,16 @@ const ViewPostDetail = ({ post }: Props) => {
   return (
     <div key={post.id} className="border p-2">
       <h2 className="mr-auto font-semibold">{post.location}</h2>
-      <button onClick={() => handleSearch(post.location)}>表示する</button>
+      {post.image && (
+        <Image
+          alt="画像"
+          src={post.image}
+          onClick={() => handleSearch(post.location)}
+          className="w-full sm:w-20"
+          width={100}
+          height={100}
+        />
+      )}
       <Link href={`/post/edit/${post.id}`}>編集する</Link>
       <div className="mr-auto">
         <p>{post?.description}</p>

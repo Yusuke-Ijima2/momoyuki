@@ -13,6 +13,7 @@ const SearchMapView = async ({ location }: Props) => {
       }
     );
     const result = await response.json();
+
     if (result.results.length > 0) {
       const location = result.results[0].geometry.location;
       return location;

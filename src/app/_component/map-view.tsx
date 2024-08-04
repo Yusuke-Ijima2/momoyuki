@@ -1,10 +1,12 @@
 "use client";
 
+import React, { useState, useRef, useEffect } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import { useEffect, useRef } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import toast from "react-hot-toast";
 
 type Props = {
-  center: any;
+  center: google.maps.LatLngLiteral;
 };
 
 const render = (status: Status): React.ReactElement => {
@@ -41,14 +43,160 @@ const Map: React.FC<{ center: google.maps.LatLngLiteral; zoom: number }> = ({
   return <div ref={ref} style={{ width: "100%", height: "100vh" }} />;
 };
 
-const MapView = ({ center }: Props) => {
+interface FormData {
+  place: string;
+  description: string;
+}
+
+const postPost = async (formData: FormData, file: File) => {
+  const data = new FormData();
+  data.append("location", formData.place);
+  data.append("description", formData.description);
+  data.append("file", file);
+
+  const res = await fetch(
+    `http://localhost:3000/api/post?filename=${file.name}`,
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to post post");
+  }
+  return res.json();
+};
+
+const SearchBox: React.FC<{
+  onPlaceChanged: (place: google.maps.places.PlaceResult) => void;
+}> = ({ onPlaceChanged }) => {
+  const placeRef = useRef<HTMLInputElement | null>(null);
+  const { register, handleSubmit, setValue } = useForm<FormData>();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  useEffect(() => {
+    const initAutocomplete = async () => {
+      if (
+        placeRef.current &&
+        window.google &&
+        window.google.maps &&
+        window.google.maps.places
+      ) {
+        const autocomplete = new window.google.maps.places.Autocomplete(
+          placeRef.current,
+          {
+            types: ["establishment"],
+            componentRestrictions: { country: "jp" },
+            fields: ["name", "geometry"],
+          }
+        );
+
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+
+          if (place.name) {
+            onPlaceChanged(place);
+            if (placeRef.current) {
+              placeRef.current.value = place.name;
+            }
+          }
+        });
+
+        // 入力フィールドの値が変更されたときのイベントリスナーを追加
+        placeRef.current.addEventListener("input", () => {
+          setValue("place", placeRef.current?.value || "");
+        });
+      }
+    };
+
+    const checkGoogleMapsLoaded = () => {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        initAutocomplete();
+      } else {
+        setTimeout(checkGoogleMapsLoaded, 100);
+      }
+    };
+
+    checkGoogleMapsLoaded();
+  }, [onPlaceChanged, setValue]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (!selectedImage) {
+      toast.error("画像を選択してください");
+      return;
+    }
+
+    try {
+      await postPost(data, selectedImage);
+
+      toast.success("追加しました", { id: "postPost" });
+    } catch (error) {
+      console.error("Error posting post:", error);
+    }
+  };
+
   return (
-    <Wrapper
-      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-      render={render}
-    >
-      <Map center={center} zoom={18} />
-    </Wrapper>
+    <div className="my-2">
+      <label>↓場所を追加する↓</label>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="space-y-2 md:space-x-2">
+          <input
+            className="p-2 border rounded"
+            type="text"
+            placeholder="登録名"
+            {...register("place", { required: true })}
+            ref={placeRef}
+          />
+          <input
+            className="p-2 border rounded"
+            type="text"
+            placeholder="説明"
+            {...register("description")}
+          />
+          <input type="file" onChange={handleImageChange} />
+          <button type="button" className="border p-2 ml-2">
+            追加
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+const MapView = ({ center }: Props) => {
+  const [location, setLocation] = useState(center);
+
+  useEffect(() => {
+    setLocation(center);
+  }, [center]);
+
+  const handlePlaceChanged = (place: google.maps.places.PlaceResult) => {
+    if (place.geometry && place.geometry.location) {
+      setLocation({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
+    }
+  };
+
+  return (
+    <>
+      <SearchBox onPlaceChanged={handlePlaceChanged} />
+      <Wrapper
+        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+        render={render}
+        libraries={["places"]}
+      >
+        <Map center={location} zoom={18} />
+      </Wrapper>
+    </>
   );
 };
 

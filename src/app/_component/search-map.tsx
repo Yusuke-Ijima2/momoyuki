@@ -2,7 +2,7 @@
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -13,20 +13,20 @@ interface FormData {
   description: string;
 }
 
-const postPost = async ({
-  location,
-  description,
-}: {
-  location: string;
-  description: string;
-}) => {
-  const res = await fetch("http://localhost:3000/api/post", {
-    method: "POST",
-    body: JSON.stringify({ location, description }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+const postPost = async (formData: FormData, file: File) => {
+  const data = new FormData();
+  data.append("location", formData.place);
+  data.append("description", formData.description);
+  data.append("file", file);
+
+  const res = await fetch(
+    `http://localhost:3000/api/post?filename=${file.name}`,
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+
   if (!res.ok) {
     throw new Error("Failed to post post");
   }
@@ -35,18 +35,25 @@ const postPost = async ({
 
 const SearchMap = ({ children }: Props) => {
   const { register, handleSubmit } = useForm<FormData>();
-  const router = useRouter();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (!selectedImage) {
+      toast.error("画像を選択してください");
+      return;
+    }
+
     try {
-      await postPost({
-        location: data.place,
-        description: data.description,
-      });
+      const response = await postPost(data, selectedImage);
 
       toast.success("追加しました", { id: "postPost" });
-
-      router.refresh();
+      console.log("Uploaded image URL:", response.imageUrl);
     } catch (error) {
       toast.error("Failed to post post", { id: "postPost" });
       console.error("Error posting post:", error);
@@ -70,6 +77,7 @@ const SearchMap = ({ children }: Props) => {
             placeholder="説明"
             {...register("description")}
           />
+          <input type="file" onChange={handleImageChange} />
           <button type="submit" className="border p-2 ml-2">
             追加
           </button>

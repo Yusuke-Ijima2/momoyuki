@@ -1,4 +1,3 @@
-import SearchMap from "./_component/search-map";
 import Auth from "./_component/auth";
 import { getServerSession } from "@/lib/auth";
 import ViewPost from "./_component/view-post";
@@ -20,9 +19,8 @@ const Home = async ({
         {session && `${session.user.name}でログイン中`} <Auth />
       </div>
       <ViewPost />
-      <SearchMap>
-        <SearchMapView location={searchParams?.location} />
-      </SearchMap>
+
+      <SearchMapView location={searchParams?.location} />
     </div>
   );
 };
