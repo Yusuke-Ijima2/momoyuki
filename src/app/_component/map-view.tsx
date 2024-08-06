@@ -6,42 +6,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-type Props = {
-  center: google.maps.LatLngLiteral;
-};
-
 const render = (status: Status): React.ReactElement => {
   if (status === Status.LOADING) return <div>Loading...</div>;
   if (status === Status.FAILURE) return <div>Error loading maps</div>;
   return <div>Map Loaded</div>;
-};
-
-const Map: React.FC<{ center: google.maps.LatLngLiteral; zoom: number }> = ({
-  center,
-  zoom,
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const markerRef = useRef<google.maps.Marker | null>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      const map = new google.maps.Map(ref.current, {
-        center,
-        zoom,
-      });
-
-      if (markerRef.current) {
-        markerRef.current.setMap(null);
-      }
-
-      markerRef.current = new google.maps.Marker({
-        position: center,
-        map: map,
-      });
-    }
-  }, [center, zoom]);
-
-  return <div ref={ref} style={{ width: "100%", height: "100vh" }} />;
 };
 
 interface FormData {
@@ -69,9 +37,7 @@ const postPost = async (formData: FormData, file: File) => {
   return res.json();
 };
 
-const SearchBox: React.FC<{
-  onPlaceChanged: (place: google.maps.places.PlaceResult) => void;
-}> = ({ onPlaceChanged }) => {
+const SearchBox: React.FC<{}> = () => {
   const placeRef = useRef<HTMLInputElement | null>(null);
   const { register, handleSubmit, setValue } = useForm<FormData>();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -99,10 +65,10 @@ const SearchBox: React.FC<{
           const place = autocomplete.getPlace();
 
           if (place.name) {
-            onPlaceChanged(place);
             if (placeRef.current) {
               placeRef.current.value = place.name;
             }
+            setValue("place", place.name);
           }
         });
 
@@ -122,7 +88,7 @@ const SearchBox: React.FC<{
     };
 
     checkGoogleMapsLoaded();
-  }, [onPlaceChanged, setValue]);
+  }, [setValue]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -140,8 +106,8 @@ const SearchBox: React.FC<{
     try {
       await postPost(data, selectedImage);
 
-      toast.success("追加しました", { id: "postPost" });
       router.refresh();
+      toast.success("追加しました", { id: "postPost" });
     } catch (error) {
       console.error("Error posting post:", error);
     }
@@ -155,66 +121,42 @@ const SearchBox: React.FC<{
   return (
     <div className="my-2">
       <label>↓場所を追加する↓</label>
-      <form>
-        <div className="space-y-2 md:space-x-2">
-          <input
-            className="p-2 border rounded"
-            type="text"
-            placeholder="登録名"
-            {...register("place", { required: true })}
-            ref={placeRef}
-          />
-          <input
-            className="p-2 border rounded"
-            type="text"
-            placeholder="説明"
-            {...register("description")}
-          />
-          <input type="file" onChange={handleImageChange} />
-          <button
-            type="button"
-            className="border p-2 ml-2"
-            onClick={handleButtonClick}
-          >
-            追加
-          </button>
-        </div>
-      </form>
+      <div className="space-y-2 md:space-x-2">
+        <input
+          className="p-2 border rounded"
+          type="text"
+          placeholder="登録名"
+          {...register("place", { required: true })}
+          ref={placeRef}
+        />
+        <input
+          className="p-2 border rounded"
+          type="text"
+          placeholder="説明"
+          {...register("description")}
+        />
+        <input type="file" onChange={handleImageChange} />
+        <button
+          type="button"
+          className="border p-2 ml-2"
+          onClick={handleButtonClick}
+        >
+          追加
+        </button>
+      </div>
     </div>
   );
 };
 
-const MapView = ({ center }: Props) => {
-  const [location, setLocation] = useState(center);
-
-  useEffect(() => {
-    setLocation(center);
-  }, [center]);
-
-  const handlePlaceChanged = (place: google.maps.places.PlaceResult) => {
-    if (place.geometry && place.geometry.location) {
-      setLocation({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      });
-    }
-  };
-
+const MapView = () => {
   return (
-    <>
-      <Wrapper
-        apiKey={process.env.GOOGLE_MAPS_API_KEY!}
-        render={render}
-        libraries={["places"]}
-      >
-        <SearchBox onPlaceChanged={handlePlaceChanged} />
-        {location ? (
-          <Map center={location} zoom={18} />
-        ) : (
-          <p>お気に入りの場所を追加してみよう！</p>
-        )}
-      </Wrapper>
-    </>
+    <Wrapper
+      apiKey={process.env.GOOGLE_MAPS_API_KEY!}
+      render={render}
+      libraries={["places"]}
+    >
+      <SearchBox />
+    </Wrapper>
   );
 };
 
