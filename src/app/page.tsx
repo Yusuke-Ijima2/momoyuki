@@ -7,7 +7,7 @@ const Home = async () => {
   const session = await getServerSession();
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 p-1">
       <p className="text-xs">v1.1 ももかとゆきちゃんのために作ったアプリ</p>
       <MapView />
       <ViewPost />
