@@ -11,7 +11,9 @@ const ViewPostDetail = ({ post }: Props) => {
     <div key={post.id} className="border p-2">
       <h2 className="mr-auto font-semibold">{post.location}</h2>
       {post.image && (
-        <Link href={`http://local.google.co.jp/maps?q=${post.location}`}>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${post.location}`}
+        >
           <Image
             alt="画像"
             src={post.image}
