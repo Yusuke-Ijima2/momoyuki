@@ -6,9 +6,6 @@ const pwaConfig = withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
-  pwa: {
-    dest: "public",
-  },
 });
 
 const config = {

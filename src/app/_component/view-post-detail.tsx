@@ -13,6 +13,8 @@ const ViewPostDetail = ({ post }: Props) => {
       {post.image && (
         <Link
           href={`https://www.google.com/maps/search/?api=1&query=${post.location}`}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <Image
             alt="画像"
