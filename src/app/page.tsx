@@ -8,12 +8,12 @@ const Home = async () => {
 
   return (
     <div className="space-y-2">
-      <p>v1.0 ももかとゆきちゃんのために作ったアプリ</p>
+      <p className="text-xs">v1.1 ももかとゆきちゃんのために作ったアプリ</p>
+      <MapView />
+      <ViewPost />
       <div className="p-4">
         {session && `${session.user.name}でログイン中`} <Auth />
       </div>
-      <ViewPost />
-      <MapView />
     </div>
   );
 };

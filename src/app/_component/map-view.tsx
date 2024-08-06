@@ -119,9 +119,9 @@ const SearchBox: React.FC<{}> = () => {
   };
 
   return (
-    <div className="my-2">
+    <div className="my-2 text-sm space-y-2 p-1">
       <label>↓場所を追加する↓</label>
-      <div className="space-y-2 md:space-x-2">
+      <div className="flex align-center items-center">
         <input
           className="p-2 border rounded"
           type="text"
@@ -135,10 +135,12 @@ const SearchBox: React.FC<{}> = () => {
           placeholder="説明"
           {...register("description")}
         />
+      </div>
+      <div className="flex  align-center items-center">
         <input type="file" onChange={handleImageChange} />
         <button
           type="button"
-          className="border p-2 ml-2"
+          className="border p-1"
           onClick={handleButtonClick}
         >
           追加

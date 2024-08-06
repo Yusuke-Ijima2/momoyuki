@@ -8,8 +8,8 @@ type Props = {
 
 const ViewPostDetail = ({ post }: Props) => {
   return (
-    <div key={post.id} className="border p-2">
-      <h2 className="mr-auto font-semibold">{post.location}</h2>
+    <div key={post.id} className="border p-1 space-y-2">
+      <h2 className="font-semibold text-sm">{post.location}</h2>
       {post.image && (
         <Link
           href={`https://www.google.com/maps/search/?api=1&query=${post.location}`}
@@ -19,20 +19,22 @@ const ViewPostDetail = ({ post }: Props) => {
           <Image
             alt="画像"
             src={post.image}
-            className="w-full sm:w-20 cursor-pointer"
-            width={100}
-            height={100}
+            objectFit="contain"
+            width={150}
+            height={150}
           />
         </Link>
       )}
-      <Link href={`/post/edit/${post.id}`}>編集する</Link>
-      <div className="mr-auto">
-        <p>{post?.description}</p>
-        <p>{post.createdBy.name}</p>
+      <div>
+        <Link href={`/post/edit/${post.id}`} className="underline text-sm">
+          編集する
+        </Link>
       </div>
-      <blockquote className="">
+      <p className="text-sm p-1 border">{post?.description}</p>
+      <p className="text-xs">by {post.createdBy.name}</p>
+      {/* <blockquote className="">
         {new Date(post.createdAt).toDateString()}
-      </blockquote>
+      </blockquote> */}
     </div>
   );
 };
