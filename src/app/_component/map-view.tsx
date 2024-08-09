@@ -24,7 +24,7 @@ const postPost = async (formData: FormData, file: File) => {
   data.append("file", file);
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_HOST}/api/post/test?filename=${file.name}`,
+    `${process.env.NEXT_PUBLIC_API_HOST}/api/post?filename=${file.name}`,
     {
       method: "POST",
       body: data,
@@ -110,7 +110,6 @@ const SearchBox: React.FC<{}> = () => {
       toast.success("追加しました", { id: "postPost" });
     } catch (error) {
       console.error("Error posting post:", error);
-      toast.error("エラーが発生しました");
     }
   };
 
@@ -164,39 +163,3 @@ const MapView = () => {
 };
 
 export default MapView;
-
-const uploadImage = async (file: File) => {
-  console.log(file);
-
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_HOST}/api/post?filename=${file.name}&fileType=${file.type}`,
-    {
-      method: "POST",
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Presigned URLの取得に失敗しました");
-  }
-
-  const { presignedPost } = await res.json();
-
-  const formData = new FormData();
-  Object.keys(presignedPost.fields).forEach((key) => {
-    formData.append(key, presignedPost.fields[key]);
-  });
-  formData.append("file", file);
-
-  console.log("formData", formData);
-
-  const uploadResponse = await fetch(presignedPost.url, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!uploadResponse.ok) {
-    throw new Error("画像のアップロードに失敗しました");
-  }
-
-  return presignedPost.url + file.name;
-};
