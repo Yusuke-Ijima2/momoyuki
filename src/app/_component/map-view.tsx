@@ -55,8 +55,10 @@ const postPost = async (formData: FormData, file: File) => {
 
 const SearchBox: React.FC<{}> = () => {
   const placeRef = useRef<HTMLInputElement | null>(null);
-  const { register, handleSubmit, setValue } = useForm<FormData>();
+  const { register, handleSubmit, setValue, reset } = useForm<FormData>();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
@@ -120,15 +122,28 @@ const SearchBox: React.FC<{}> = () => {
 
     const uploadTask = postPost(data, selectedImage);
 
-    toast.loading("追加しています...", { id: "postPost" });
+    toast.loading(`${data.place}を追加しています...`, { id: "postPost" });
+
+    // フォームをクリア
+    reset();
+    setSelectedImage(null);
+    if (placeRef.current) {
+      placeRef.current.value = "";
+    }
+    if (descriptionRef.current) {
+      descriptionRef.current.value = "";
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
 
     try {
       await uploadTask;
       router.refresh();
-      toast.success("追加しました", { id: "postPost" });
+      toast.success(`${data.place}を追加しました`, { id: "postPost" });
     } catch (error) {
       console.error("Error posting post:", error);
-      toast.error("アップロードに失敗しました", { id: "postPost" });
+      toast.error(`${data.place}の追加に失敗しました`, { id: "postPost" });
     }
   };
 
@@ -153,10 +168,16 @@ const SearchBox: React.FC<{}> = () => {
         type="text"
         placeholder="説明"
         {...register("description")}
+        ref={descriptionRef}
       />
 
       <div className="flex  align-center items-center w-full">
-        <input className="w-full" type="file" onChange={handleImageChange} />
+        <input
+          className="w-full"
+          type="file"
+          onChange={handleImageChange}
+          ref={fileInputRef}
+        />
         <button
           type="button"
           className="border p-2 rounded whitespace-nowrap"
