@@ -25,7 +25,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <NextAuthProvider>
-          <Toaster />
+          <Toaster position="bottom-center" />
           {children}
         </NextAuthProvider>
       </body>

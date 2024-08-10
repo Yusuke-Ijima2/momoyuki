@@ -155,6 +155,7 @@ const SearchBox: React.FC<{}> = () => {
   return (
     <div className="my-2 text-sm space-y-2 p-1">
       <label>↓場所を追加する↓</label>
+      <button onClick={() => router.refresh()}>更新</button>
 
       <input
         className="p-2 border rounded w-full"
