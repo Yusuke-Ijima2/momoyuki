@@ -5,6 +5,7 @@ import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import imageCompression from "browser-image-compression";
 
 const render = (status: Status): React.ReactElement => {
   if (status === Status.LOADING) return <div>Loading...</div>;
@@ -17,14 +18,29 @@ interface FormData {
   description: string;
 }
 
+const compressImage = async (file: File) => {
+  const options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1024,
+    useWebWorker: true,
+  };
+  return await imageCompression(file, options);
+};
+
 const postPost = async (formData: FormData, file: File) => {
+  const compressedFile = await compressImage(file);
+
+  const timestamp = Date.now();
+  const extension = file.name.split(".").pop(); // Get file extension
+  const uniqueFileName = `${timestamp}.${extension}`;
+
   const data = new FormData();
   data.append("location", formData.place);
   data.append("description", formData.description);
-  data.append("file", file);
+  data.append("file", compressedFile);
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_HOST}/api/post?filename=${file.name}`,
+    `${process.env.NEXT_PUBLIC_API_HOST}/api/post?filename=${uniqueFileName}`,
     {
       method: "POST",
       body: data,
@@ -101,15 +117,18 @@ const SearchBox: React.FC<{}> = () => {
       toast.error("画像を選択してください");
       return;
     }
+
+    const uploadTask = postPost(data, selectedImage);
+
     toast.loading("追加しています...", { id: "postPost" });
 
     try {
-      await postPost(data, selectedImage);
-
+      await uploadTask;
       router.refresh();
       toast.success("追加しました", { id: "postPost" });
     } catch (error) {
       console.error("Error posting post:", error);
+      toast.error("アップロードに失敗しました", { id: "postPost" });
     }
   };
 
