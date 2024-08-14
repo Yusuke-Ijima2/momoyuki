@@ -23,7 +23,7 @@ const ViewPost = async () => {
   const posts = await fetchPosts();
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="grid grid-cols-2">
       {posts.map((post: PostProps) => (
         <ViewPostDetail key={post.id} post={post} />
       ))}
